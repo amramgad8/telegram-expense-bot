@@ -1,11 +1,13 @@
 import os
+import json
 import datetime
 import gspread
 from google.oauth2.service_account import Credentials
 
-# إعداد صلاحيات الوصول
+# إعداد صلاحيات الوصول من Environment Variable
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-creds = Credentials.from_service_account_file("credentials.json", scopes=SCOPES)
+creds_dict = json.loads(os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON"))
+creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
 gc = gspread.authorize(creds)
 
 # إنشاء شيت جديد حسب الشهر الحالي
