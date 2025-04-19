@@ -4,13 +4,18 @@ import datetime
 import gspread
 from google.oauth2.service_account import Credentials
 
-# إعداد صلاحيات الوصول من Environment Variable
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+# ✅ إعداد صلاحيات الوصول المطلوبة
+SCOPES = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive"  # ← دي اللي كانت ناقصة
+]
+
+# ✅ تحميل بيانات الاعتماد من Environment Variable
 creds_dict = json.loads(os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON"))
 creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
 gc = gspread.authorize(creds)
 
-# إنشاء شيت جديد حسب الشهر الحالي
+# ✅ إنشاء شيت جديد حسب الشهر الحالي
 def get_or_create_sheet():
     now = datetime.datetime.now()
     sheet_title = f"Expenses - {now.strftime('%Y-%m')}"
@@ -28,7 +33,7 @@ def get_or_create_sheet():
     
     return sh.get_worksheet(0)
 
-# تسجيل المصروف في الشيت
+# ✅ تسجيل المصروف في الشيت
 def log_expense(date, amount, description):
     worksheet = get_or_create_sheet()
     worksheet.append_row([date, amount, description])
